@@ -26,8 +26,10 @@ class RoverState :
 
     ## you do this.
     def __eq__(self, other):
-       pass
-
+        if self.prev is not None:
+            return self.__repr__() == other.__repr__()
+        else:
+            return False
 
     def __repr__(self):
         return (f"Location: {self.loc}\n" +
@@ -97,11 +99,31 @@ action_list = [charge, drop_sample, pick_up_sample,
 
 def battery_goal(state) :
     return state.loc == "battery"
-## add your goals here.
+
+def sample_goal(state) :
+    return state.loc == "sample"
+
+def station_goal(state) :
+    return state.loc == "station"
 
 def mission_complete(state) :
-    pass
+    """
+    The mission is complete when the sample is dropped off at the station,
+    rover is at the battery station, and the battery is fully charged.
 
+    Parameters
+    ----------
+    state : RoverState
+        Current state of the rover.
+
+    Returns
+    -------
+    bool
+        Is the mission complete?
+    """
+    sample_state = state.sample_extracted and not state.holding_sample
+    
+    return battery_goal(state) and state.charged and sample_state
 
 if __name__=="__main__" :
     s = RoverState()
