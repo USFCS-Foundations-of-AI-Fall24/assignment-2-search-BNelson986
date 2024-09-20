@@ -6,6 +6,7 @@ from collections import deque
 def breadth_first_search(startState, action_list, goal_test, use_closed_list=True) :
     search_queue = deque()
     closed_list = {}
+    num_states = 0
 
     search_queue.append((startState,""))
     if use_closed_list :
@@ -20,6 +21,8 @@ def breadth_first_search(startState, action_list, goal_test, use_closed_list=Tru
             while ptr is not None :
                 ptr = ptr.prev
                 print(ptr)
+                num_states += 1
+            print("States needed to reach goal: ", num_states)
             return next_state
         else :
             successors = next_state[0].successors(action_list)
@@ -36,6 +39,7 @@ def breadth_first_search(startState, action_list, goal_test, use_closed_list=Tru
 def depth_first_search(startState, action_list, goal_test, use_closed_list=True,limit=0) :
     search_queue = deque()
     closed_list = {}
+    num_states = 0
 
     search_queue.append((startState,""))
     if use_closed_list :
@@ -49,7 +53,9 @@ def depth_first_search(startState, action_list, goal_test, use_closed_list=True,
             ptr = next_state[0]
             while ptr is not None :
                 ptr = ptr.prev
+                num_states += 1
                 print(ptr)
+            print("States needed to reach goal: ", num_states)
             return next_state
         else :
             successors = next_state[0].successors(action_list)
@@ -62,6 +68,3 @@ def depth_first_search(startState, action_list, goal_test, use_closed_list=True,
 
 ## add iterative deepening search here
 
-
-
-f

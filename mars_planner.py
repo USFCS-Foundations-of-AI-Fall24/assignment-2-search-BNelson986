@@ -14,7 +14,8 @@
 ## Charged can be True or False
 
 from copy import deepcopy
-from search_algorithms import breadth_first_search
+from search_algorithms import breadth_first_search, depth_first_search
+
 
 class RoverState :
     def __init__(self, loc="station", sample_extracted=False, holding_sample=False, charged=False):
@@ -26,10 +27,12 @@ class RoverState :
 
     ## you do this.
     def __eq__(self, other):
-        if self.prev is not None:
-            return self.__repr__() == other.__repr__()
-        else:
+        if not isinstance(other, RoverState):
             return False
+        return (self.loc == other.loc and
+                self.sample_extracted == other.sample_extracted and
+                self.holding_sample == other.holding_sample and
+                self.charged == other.charged)
 
     def __repr__(self):
         return (f"Location: {self.loc}\n" +
@@ -45,7 +48,9 @@ class RoverState :
         ## apply each function in the list of actions to the current state to get
         ## a new state.
         ## add the name of the function also
+        ## prevent addition of repeated states
         succ = [(item(self), item.__name__) for item in list_of_actions]
+
         ## remove actions that have no effect
 
         succ = [item for item in succ if not item[0] == self]
@@ -74,7 +79,8 @@ def move_to_battery(state) :
 
 def pick_up_sample(state) :
     r2 = deepcopy(state)
-    if state.sample_extracted and state.loc == "sample":
+    if not state.sample_extracted and state.loc == "sample":
+        r2.sample_extracted = True
         r2.holding_sample = True
     r2.prev = state
     return r2
@@ -88,7 +94,7 @@ def drop_sample(state) :
 
 def charge(state) :
     r2 = deepcopy(state)
-    if state.sample_extracted and state.loc == "sample":
+    if not state.charged and state.loc == "battery":
         r2.charged = True
     r2.prev = state
     return r2
@@ -128,7 +134,10 @@ def mission_complete(state) :
 if __name__=="__main__" :
     s = RoverState()
     result = breadth_first_search(s, action_list, mission_complete)
-    print(result)
+    print("BFS result:\n", result)
+
+    result = depth_first_search(s, action_list, mission_complete)
+    print("DFS result:\n", result)
 
 
 
