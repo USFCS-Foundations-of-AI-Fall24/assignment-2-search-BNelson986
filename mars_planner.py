@@ -14,6 +14,9 @@
 ## Charged can be True or False
 
 from copy import deepcopy
+
+from mercurial.revset import limit
+
 from search_algorithms import breadth_first_search, depth_first_search
 
 
@@ -136,7 +139,7 @@ if __name__=="__main__" :
     result = breadth_first_search(s, action_list, mission_complete)
     print("BFS result:\n", result)
 
-    result = depth_first_search(s, action_list, mission_complete)
+    result = depth_first_search(s, action_list, mission_complete, limit=10)
     print("DFS result:\n", result)
 
 
