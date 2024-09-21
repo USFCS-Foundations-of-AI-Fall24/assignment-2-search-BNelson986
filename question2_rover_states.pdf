@@ -1,0 +1,153 @@
+Q2
+----------------------------------
+1-5
+----------------------------------
+BFS result:
+States needed to reach goal:  83
+(Location: battery
+Holding Tool?: True
+Sample Extracted?: True
+Holding Sample?: False
+Charged? True, 'charge')
+
+DFS result:
+States needed to reach goal:  28
+(Location: battery
+Holding Tool?: True
+Sample Extracted?: True
+Holding Sample?: False
+Charged? True, 'move_to_battery', 9)
+
+
+DLS result:
+States needed to reach goal:  28
+(Location: battery
+Holding Tool?: True
+Sample Extracted?: True
+Holding Sample?: False
+Charged? True, 'move_to_battery', 9)
+
+IDS result:
+States needed to reach goal:  46
+(Location: battery
+Holding Tool?: True
+Sample Extracted?: True
+Holding Sample?: False
+Charged? True, 'charge', 7)
+
+6.
+-----------------------------------------
+Sub problem solutions:
+
+### BFS
+get sample  result:
+ (Location: sample
+Holding Tool?: True
+Sample Extracted?: True
+Holding Sample?: True
+Charged? False, 'use_tool')
+States needed to reach goal:  19
+
+
+drop sample  result:
+ (Location: station
+Holding Tool?: False
+Sample Extracted?: True
+Holding Sample?: False
+Charged? False, 'drop_sample')
+States needed to reach goal:  24
+
+
+charge battery  result:
+ (Location: battery
+Holding Tool?: False
+Sample Extracted?: True
+Holding Sample?: False
+Charged? True, 'charge')
+States needed to reach goal:  16
+
+
+### DFS
+get sample  result:
+ (Location: sample
+Holding Tool?: True
+Sample Extracted?: True
+Holding Sample?: True
+Charged? True, 'use_tool', 6)
+States needed to reach goal:  19
+
+
+drop sample  result:
+ (Location: station
+Holding Tool?: False
+Sample Extracted?: True
+Holding Sample?: False
+Charged? True, 'drop_tool', 6)
+States needed to reach goal:  17
+
+
+charge battery  result:
+ (Location: battery
+Holding Tool?: False
+Sample Extracted?: True
+Holding Sample?: False
+Charged? True, 'charge', 2)
+States needed to reach goal:  6
+
+
+### DLS
+get sample  result:
+ (Location: sample
+Holding Tool?: True
+Sample Extracted?: True
+Holding Sample?: True
+Charged? True, 'use_tool', 6)
+States needed to reach goal:  19
+
+
+drop sample  result:
+ (Location: station
+Holding Tool?: False
+Sample Extracted?: True
+Holding Sample?: False
+Charged? True, 'drop_tool', 6)
+States needed to reach goal:  17
+
+
+charge battery  result:
+ (Location: battery
+Holding Tool?: False
+Sample Extracted?: True
+Holding Sample?: False
+Charged? True, 'charge', 2)
+States needed to reach goal:  6
+
+
+### IDS
+get sample  result:
+ (Location: sample
+Holding Tool?: True
+Sample Extracted?: True
+Holding Sample?: True
+Charged? False, 'use_tool', 3)
+States needed to reach goal:  19
+
+
+drop sample  result:
+ (Location: station
+Holding Tool?: False
+Sample Extracted?: True
+Holding Sample?: False
+Charged? False, 'drop_tool', 3)
+States needed to reach goal:  9
+
+
+charge battery  result:
+ (Location: battery
+Holding Tool?: False
+Sample Extracted?: True
+Holding Sample?: False
+Charged? True, 'charge', 2)
+States needed to reach goal:  6
+
+

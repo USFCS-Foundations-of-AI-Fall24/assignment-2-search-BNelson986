@@ -15,17 +15,18 @@
 
 from copy import deepcopy
 
-from mercurial.revset import limit
-
-from search_algorithms import breadth_first_search, depth_first_search
+from search_algorithms import (breadth_first_search,
+                               depth_first_search,
+                               iterative_deepening_search)
 
 
 class RoverState :
-    def __init__(self, loc="station", sample_extracted=False, holding_sample=False, charged=False):
+    def __init__(self, loc="station", holding_tool=False, sample_extracted=False, holding_sample=False, charged=False):
         self.loc = loc
-        self.sample_extracted=sample_extracted
+        self.holding_tool = holding_tool
+        self.sample_extracted = sample_extracted
         self.holding_sample = holding_sample
-        self.charged=charged
+        self.charged = charged
         self.prev = None
 
     ## you do this.
@@ -33,12 +34,14 @@ class RoverState :
         if not isinstance(other, RoverState):
             return False
         return (self.loc == other.loc and
+                self.holding_tool == other.holding_tool and
                 self.sample_extracted == other.sample_extracted and
                 self.holding_sample == other.holding_sample and
                 self.charged == other.charged)
 
     def __repr__(self):
         return (f"Location: {self.loc}\n" +
+                f"Holding Tool?: {self.holding_tool}\n" +
                 f"Sample Extracted?: {self.sample_extracted}\n"+
                 f"Holding Sample?: {self.holding_sample}\n" +
                 f"Charged? {self.charged}")
@@ -79,10 +82,23 @@ def move_to_battery(state) :
     return r2
 # add tool functions here
 
-
-def pick_up_sample(state) :
+def pick_up_tool(state) :
     r2 = deepcopy(state)
-    if not state.sample_extracted and state.loc == "sample":
+    if not state.holding_tool and state.loc == "station":
+        r2.holding_tool = True
+    r2.prev = state
+    return r2
+
+def drop_tool(state) :
+    r2 = deepcopy(state)
+    if state.holding_tool and state.loc == "station":
+        r2.holding_tool = False
+    r2.prev = state
+    return r2
+
+def use_tool(state) :
+    r2 = deepcopy(state)
+    if not state.sample_extracted and state.loc == "sample" and state.holding_tool:
         r2.sample_extracted = True
         r2.holding_sample = True
     r2.prev = state
@@ -103,17 +119,22 @@ def charge(state) :
     return r2
 
 
-action_list = [charge, drop_sample, pick_up_sample,
+action_list = [charge, pick_up_tool, drop_tool, use_tool, drop_sample,
                move_to_sample, move_to_battery, move_to_station]
 
 def battery_goal(state) :
-    return state.loc == "battery"
+    return state.loc == "battery" and state.charged
 
 def sample_goal(state) :
-    return state.loc == "sample"
+    return state.loc == "sample" and state.sample_extracted
 
 def station_goal(state) :
-    return state.loc == "station"
+    return (
+        state.loc == "station" and
+        state.sample_extracted and
+        not state.holding_tool and
+        not state.holding_sample
+    )
 
 def mission_complete(state) :
     """
@@ -134,13 +155,106 @@ def mission_complete(state) :
     
     return battery_goal(state) and state.charged and sample_state
 
+## Starting states to break problem into 3 different parts
+## Element layout:
+## start_state_name: [
+##     starting state,
+##     goal test,
+##     ]
+sub_problems = {
+    'get sample': [
+        RoverState(
+            loc="station",
+            holding_tool=False,
+            sample_extracted=False,
+            holding_sample=False,
+            charged=False
+        ),
+        sample_goal
+    ],
+    'drop sample': [
+        RoverState(
+            loc="sample",
+            holding_tool=True,
+            sample_extracted=True,
+            holding_sample=True,
+            charged=False
+        ),
+        station_goal
+    ],
+    'charge battery': [
+        RoverState(
+            loc="station",
+            holding_tool=False,
+            sample_extracted=True,
+            holding_sample=False,
+            charged=False
+        ),
+        battery_goal
+    ]
+}
+
 if __name__=="__main__" :
+    '''    ## BFS solution
     s = RoverState()
-    result = breadth_first_search(s, action_list, mission_complete)
+    result, states = breadth_first_search(s, action_list, mission_complete)
     print("BFS result:\n", result)
+    print("States needed to reach goal: ", states)
 
-    result = depth_first_search(s, action_list, mission_complete, limit=10)
+    s = RoverState()
+    ## DFS solution
+    result, states = depth_first_search(s, action_list, mission_complete)
     print("DFS result:\n", result)
+    print("States needed to reach goal: ", states)
+
+    s = RoverState()
+    ## DLS solution
+    result, states = depth_first_search(s, action_list, mission_complete, limit=10)
+    print("DLS result:\n", result)
+    print("States needed to reach goal: ", states)
+
+    s = RoverState()
+    ## IDS solution
+    result, states = iterative_deepening_search(s, action_list, mission_complete)
+    print("IDS result:\n", result)
+    print("States needed to reach goal: ", states)'''
 
 
+    ## Sub problem Solutions - BFS
+    print("Sub problem solutions:\n")
+    print("BFS")
+    for key, value in sub_problems.items() :
+        result, states = breadth_first_search(value[0], action_list, value[1])
+        print(key, " result:\n", result)
+        print("States needed to reach goal: ", states)
+        print("\n")
 
+
+    ## Sub problem Solutions - DFS
+    print("DFS")
+    for key, value in sub_problems.items() :
+        result, states = depth_first_search(value[0], action_list, value[1])
+        print(key, " result:\n", result)
+        print("States needed to reach goal: ", states)
+        print("\n")
+
+
+    ## Sub problem Solutions - DLS
+    print("DLS")
+    for key, value in sub_problems.items() :
+        result, states = depth_first_search(value[0], action_list, value[1], limit=10)
+        print(key, " result:\n", result)
+        print("States needed to reach goal: ", states)
+        print("\n")
+
+    ## Sub problem Solutions - IDS
+    print("IDS")
+    for key, value in sub_problems.items() :
+        result, states = iterative_deepening_search(value[0], action_list, value[1])
+        print(key, " result:\n", result)
+        print("States needed to reach goal: ", states)
+        print("\n")
+
+    '''result, states = breadth_first_search(sub_problems['drop sample'][0], action_list, sub_problems['drop sample'][1])
+    print("drop sample result:\n", result)
+    print("States needed to reach goal: ", states)'''

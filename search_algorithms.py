@@ -3,7 +3,7 @@ from collections import deque
 
 
 ## We will append tuples (state, "action") in the search queue
-def breadth_first_search(startState, action_list, goal_test, use_closed_list=True) :
+def breadth_first_search(startState, action_list, goal_test, use_closed_list=True, print_states=False) :
     search_queue = deque()
     closed_list = {}
     num_states = 0
@@ -15,17 +15,18 @@ def breadth_first_search(startState, action_list, goal_test, use_closed_list=Tru
         ## this is a (state, "action") tuple
         next_state = search_queue.popleft()
         if goal_test(next_state[0]):
-            print("Goal found")
-            print(next_state)
-            ptr = next_state[0]
-            while ptr is not None :
-                ptr = ptr.prev
-                print(ptr)
-                num_states += 1
-            print("States needed to reach goal: ", num_states)
-            return next_state
+            if print_states:
+                print("Goal found")
+                print(next_state)
+                ptr = next_state[0]
+                while ptr is not None:
+                    ptr = ptr.prev
+                    print(ptr)
+                print("States needed to reach goal: ", num_states)
+            return next_state, num_states
         else :
             successors = next_state[0].successors(action_list)
+            num_states += len(successors)
             if use_closed_list :
                 successors = [item for item in successors
                                     if item[0] not in closed_list]
@@ -36,7 +37,7 @@ def breadth_first_search(startState, action_list, goal_test, use_closed_list=Tru
 ### Note the similarity to BFS - the only difference is the search queue
 
 ## use the limit parameter to implement depth-limited search
-def depth_first_search(startState, action_list, goal_test, use_closed_list=True, limit=None) :
+def depth_first_search(startState, action_list, goal_test, use_closed_list=True, limit=None, print_states=False) :
     search_queue = deque()
     closed_list = {}
     num_states = 0
@@ -49,17 +50,18 @@ def depth_first_search(startState, action_list, goal_test, use_closed_list=True,
         ## this is a (state, "action") tuple
         next_state = search_queue.pop()
         if goal_test(next_state[0]):
-            print("Goal found")
-            print(next_state)
-            ptr = next_state[0]
-            while ptr is not None :
-                ptr = ptr.prev
-                num_states += 1
-                print(ptr)
-            print("States needed to reach goal: ", num_states)
-            return next_state
+            if print_states :
+                print("Goal found")
+                print(next_state)
+                ptr = next_state[0]
+                while ptr is not None:
+                    ptr = ptr.prev
+                    print(ptr)
+                print("States needed to reach goal: ", num_states)
+            return next_state, num_states
         if limit is None or next_state[2] < limit :
             successors = next_state[0].successors(action_list)
+            num_states += len(successors)
             if use_closed_list :
                 successors = [item for item in successors
                                     if item[0] not in closed_list]
@@ -71,15 +73,17 @@ def depth_first_search(startState, action_list, goal_test, use_closed_list=True,
 
     ### Finishing up Iterative Deepening Search
     ### Q4-5
-    if limit is not None :
-        print("Exceeded depth limit: ", limit)
-    else:
-        print("No solution found")
+    if print_states:
+        if limit is not None :
+            print("Exceeded depth limit: ", int(limit))
+            return None
+        else:
+            print("No solution found")
 
 ## add iterative deepening search here
 
 
-def iterative_deepening_search(startState, action_list, goal_test) :
+def iterative_deepening_search(startState, action_list, goal_test, print_states=False):
     """
     Perform an iterative deepening search. By adjusting depth limits until a solution is found.
 
@@ -96,10 +100,15 @@ def iterative_deepening_search(startState, action_list, goal_test) :
     -------
     result : state
         The state that satisfies the goal test. If no solution is found, None is returned.
+        :param print_states:
     """
-    limit = 0
-    while True :
-        result = depth_first_search(startState, action_list, goal_test, limit)
-        if result :
-            return result
+    limit = 1
+    result = None
+    num_states = 0
+    while result is None:
+        temp_result = depth_first_search(startState, action_list, goal_test, limit=limit, print_states=print_states)
+        if temp_result is not None:
+            result = temp_result[0]
+            num_states = temp_result[1]
         limit += 1
+    return result, num_states
