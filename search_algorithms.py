@@ -78,3 +78,28 @@ def depth_first_search(startState, action_list, goal_test, use_closed_list=True,
 
 ## add iterative deepening search here
 
+
+def iterative_deepening_search(startState, action_list, goal_test) :
+    """
+    Perform an iterative deepening search. By adjusting depth limits until a solution is found.
+
+    Parameters
+    ----------
+    startState : state
+        The starting state of the search.
+    action_list : list of functions
+        Each function takes a state and returns a new state.
+    goal_test : function
+        Takes a state and returns a boolean indicating whether the state is a goal state.
+
+    Returns
+    -------
+    result : state
+        The state that satisfies the goal test. If no solution is found, None is returned.
+    """
+    limit = 0
+    while True :
+        result = depth_first_search(startState, action_list, goal_test, limit)
+        if result :
+            return result
+        limit += 1
