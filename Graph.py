@@ -9,7 +9,7 @@ class Node :
     def __repr__(self):
         return str(self.value)
     def __eq__(self, other):
-        return self.value == other.value
+        return self.value == other
 
 ## now src and dest are going to be strings.
 class Edge:
@@ -42,4 +42,9 @@ class Graph :
         if src in self.g:
             return self.g[src]
 
-
+    def has_node(self, index):
+        try:
+            if index in self.g:
+                return True
+        except AttributeError:
+            return False
