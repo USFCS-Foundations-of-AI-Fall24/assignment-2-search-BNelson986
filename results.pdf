@@ -177,4 +177,8 @@ Antenna9: f0
 
 
 
+Q5 Deep Blue vs AlphaZero
 
+a) Some of the advances in engineering that lead to deep blues success were the development of a a single-chip chess search processor which enabled the machine to evaluate future moves with high speed, deep blue also incorporated a heavily parallel system to concurrently search through the tree of moves without creating a huge backlog. The parallelism developed for deep blue has the ability to be transferred to numerous other computing problems from graphics generation to neural networks and is very widely used in today’s world of computing. The custom chess chip that was developed for deep blue seems to be a one-off design that was created for a very specific problem and would probably not be overly useful outside of the original problem set.
+
+b) The reasons behind AlphaZero being able to defeat stockfish with much less time has to do with the design and use of the neural network and how alphazero is able to learn and adjust its heuristics as the game plays out which allows it to eliminate positions that are determined as poor moves very early on in the evaluation of future states. This allows alphazero to instead focus on more important and productive possibilities. 
