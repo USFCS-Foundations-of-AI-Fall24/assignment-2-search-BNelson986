@@ -1,4 +1,4 @@
-Q2
+﻿Q2
 ----------------------------------
 1-5
 ----------------------------------
@@ -149,5 +149,32 @@ Sample Extracted?: True
 Holding Sample?: False
 Charged? True, 'charge', 2)
 States needed to reach goal:  6
+
+----------------------------------------
+
+Q3 A* Mars Planner:
+
+Uniform Cost Search:
+States needed to reach goal: 61
+
+Straight Line Distance: 
+States needed to reach goal: 49
+
+-----------------------------------------
+
+Q4 Constraints:
+Antenna1: f1
+Antenna2: f0
+Antenna3: f2
+Antenna4: f2
+Antenna5: f1
+Antenna6: f1
+Antenna7: f0
+Antenna8: f2
+Antenna9: f0
+
+
+
+
 
 
