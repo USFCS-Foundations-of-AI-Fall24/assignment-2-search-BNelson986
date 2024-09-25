@@ -194,6 +194,64 @@ sub_problems = {
     ]
 }
 
+def print_solutions() :
+    ## BFS solution
+    s = RoverState()
+    result, states = breadth_first_search(s, action_list, mission_complete)
+    print("BFS result:\n", result)
+    print("States needed to reach goal: ", states)
+
+    s = RoverState()
+    ## DFS solution
+    result, states = depth_first_search(s, action_list, mission_complete)
+    print("\nDFS result:\n", result)
+    print("States needed to reach goal: ", states)
+
+    s = RoverState()
+    ## DLS solution
+    result, states = depth_first_search(s, action_list, mission_complete, limit=10)
+    print("\nDLS result:\n", result)
+    print("States needed to reach goal: ", states)
+
+    s = RoverState()
+    ## IDS solution
+    result, states = iterative_deepening_search(s, action_list, mission_complete)
+    print("\nIDS result:\n", result)
+    print("States needed to reach goal: ", states)
+
+    ## Sub problem Solutions - BFS
+    print("\nSub problem solutions:\n")
+    print("BFS")
+    for key, value in sub_problems.items():
+        result, states = breadth_first_search(value[0], action_list, value[1])
+        print(key, " result:\n", result)
+        print("States needed to reach goal: ", states)
+        print("\n")
+
+    ## Sub problem Solutions - DFS
+    print("DFS")
+    for key, value in sub_problems.items():
+        result, states = depth_first_search(value[0], action_list, value[1])
+        print(key, " result:\n", result)
+        print("States needed to reach goal: ", states)
+        print("\n")
+
+    ## Sub problem Solutions - DLS
+    print("DLS")
+    for key, value in sub_problems.items():
+        result, states = depth_first_search(value[0], action_list, value[1], limit=10)
+        print(key, " result:\n", result)
+        print("States needed to reach goal: ", states)
+        print("\n")
+
+    ## Sub problem Solutions - IDS
+    print("IDS")
+    for key, value in sub_problems.items():
+        result, states = iterative_deepening_search(value[0], action_list, value[1])
+        print(key, " result:\n", result)
+        print("States needed to reach goal: ", states)
+        print("\n")
+
 if __name__=="__main__" :
     '''    ## BFS solution
     s = RoverState()

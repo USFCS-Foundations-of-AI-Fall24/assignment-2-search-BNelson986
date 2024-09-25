@@ -172,6 +172,18 @@ def read_mars_graph(filename):
 
     return mars_graph
 
+def print_solutions() :
+    mars_graph = read_mars_graph("marsmap.docx")
+
+    start_state = map_state(location=src, mars_graph=mars_graph, prev_state=None,
+                            g=0, h=sld(map_state(src, mars_graph)))
+
+    result, num_states = a_star(start_state=start_state, heuristic_fn=sld, goal_test=map_state.is_goal)
+
+    print("Final State: ", result)
+    print("States needed to reach goal: ", num_states)
+
+
 if __name__ == '__main__':
     mars_graph = read_mars_graph("marsmap.docx")
 

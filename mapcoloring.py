@@ -45,5 +45,3 @@ if status == cp_model.OPTIMAL or status == cp_model.FEASIBLE:
     print("Santa Clara: %s" % colors[solver.Value(SantaClara)])
     print("San Mateo: %s" % colors[solver.Value(SanMateo)])
     print("Napa: %s" % colors[solver.Value(Napa)])
-
-
