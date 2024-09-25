@@ -1,7 +1,6 @@
 from collections import deque
 
 
-
 ## We will append tuples (state, "action") in the search queue
 def breadth_first_search(startState, action_list, goal_test, use_closed_list=True, print_states=False) :
     search_queue = deque()
